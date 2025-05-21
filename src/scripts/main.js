@@ -47,11 +47,14 @@ firstPromise
   .catch((msg) => showMessage(msg, 'error'));
 
 const secondPromise = new Promise((resolve) => {
-  document.addEventListener('mousedown', (e) => {
+  const handler = (e) => {
     if (e.button === 0 || e.button === 2) {
       resolve('Second promise was resolved');
+      document.removeEventListener('mousedown', handler);
     }
-  });
+  };
+
+  document.addEventListener('mousedown', handler);
 });
 
 secondPromise.then((msg) => showMessage(msg, 'success'));
@@ -61,7 +64,7 @@ let rightClicked = false;
 let isThirdResolved = false;
 
 const thirdPromise = new Promise((resolve) => {
-  document.addEventListener('mousedown', (e) => {
+  const handler = (e) => {
     if (e.button === 0) {
       leftClicked = true;
     }
@@ -73,8 +76,11 @@ const thirdPromise = new Promise((resolve) => {
     if (leftClicked && rightClicked && !isThirdResolved) {
       isThirdResolved = true;
       resolve('Third promise was resolved');
+      document.removeEventListener('mousedown', handler);
     }
-  });
+  };
+
+  document.addEventListener('mousedown', handler);
 });
 
 thirdPromise.then((msg) => showMessage(msg, 'success'));
